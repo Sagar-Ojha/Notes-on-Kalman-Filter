@@ -1,0 +1,14 @@
+\section{Kalman Filter}
+\hspace{\parindent}The filter can be derived using different approaches. How to estimate
+
+\begin{itemize}
+    \item If $\inv{A}$ exists, then $x = \inv{A} b$.
+    \item If the linear map represented by $A$ is not bijective, then $\inv{A}$ doesn't exist. In that case, there exists a pseudoinverse $A^{\dag}$. In fact, $A^{\dag}$ always exists and is unique regardless of the existence of the inverse.
+\end{itemize}
+
+The useful interpretations of $A^\dag$ are motivated, derived, and discussed in the upcoming subsections.
+%----------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------
+\subsection{Linear Model}
+\hspace{\parindent}Let $A \in \Re^{m \times n}$ where $m > n$, i.e., $A$ is a tall matrix. In this case, $A x = b$ maps the vector $x$ from a lower dimensional subspace to the vector $b$ in the higher dimensional subspace. If $b \in \col{A}$, then $x$ is the solution but $b \in \col{A}$ is just a special case. When $b \notin \col{A}$, the best we can have is a least square solution for $A x = b$. Hence, that sets up our goal and we'll explore the method to obtain the least square solution $x^*$.
