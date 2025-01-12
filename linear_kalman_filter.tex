@@ -1,10 +1,10 @@
 \section{Kalman Filter}
-\hspace{\parindent}Kalman filter is a state estimation algorithm. \textit{There is something called a Kalman predictor as well, which is also a state estimator.} Kalman filter is optimal in the sense that for a linear system, if the process and measurement noise are Gaussian, the filter will minimize the covariance of the state estimation error; therefore, it is the best linear state estimator. The filter can be derived using different approaches. \href{https://ieeexplore.ieee.org/document/6279585}{This} article is a good starting point for a beginner. I found the derivation provided by Prof. Goel \href{https://www.youtube.com/watch?v=bVj_EfWFvqs}{here} to be detailed enough to answer a lot of the queries that one might have when learning and deriving the filter.
+\hspace{\parindent}Kalman filter is a state estimation algorithm. \textit{There is also something called a Kalman predictor, which is also a state estimator.} The Kalman filter is optimal in that if the process and measurement noise are Gaussian for a linear system, the filter will minimize the covariance of the state estimation error; therefore, it is the best linear state estimator. The filter can be derived using different approaches. \href{https://ieeexplore.ieee.org/document/6279585}{This} article is a good starting point for a beginner. I found the derivation provided by Prof. Goel \href{https://www.youtube.com/watch?v=bVj_EfWFvqs}{here} to be detailed enough to answer many of the questions that one might have when learning and deriving the filter.
 
-Before starting off with the filter itself, let's discuss why one needs a state estimator or an observer. If the sensors do not provide the measurements of all the states, then one can use an observer to estimate the system states given that the system in observable. Note that we can't use an analytical method to calculate missing system states because
+Before starting with the filter itself, let us discuss why one needs a state estimator or an observer. If the sensors do not provide the measurements of all the states, then one can use an observer to estimate the system states given that the system is observable. Note that we cannot use an analytical method to calculate missing system states because
 \begin{itemize}
-    \item sensor readings are noisy and if the system state is a derivative of the measured state, then we can't realiably estimate the state from the measurement
-    \item the initial state is unknown and if the system state is an integral of the measured state, then we can't estimate the state because of unknown initial condition.
+    \item sensor readings are noisy and if the system state is a derivative of the measured state, then we can't reliably estimate the state from the measurement
+    \item the initial state is unknown and if the system state is an integral of the measured state, then we can't estimate the state because of the unknown initial condition.
 \end{itemize}
 %----------------------------------------------------------------------------
 
@@ -16,16 +16,16 @@ Before starting off with the filter itself, let's discuss why one needs a state 
     y_k &= C x_k + D_2 w_k
     \label{eqn:stateSpaceModelWNoise}
 \end{align}
-where $w_k \sim\mathcal{N}(\mu, \sigma^2)$ is the noise vector. The choices of $D_1, D_2$ makes sure that the process and the measurement noises are independent. Also, $w_k$ follows a Gaussian distribution with mean $\mu$ and variance $\sigma^2$. Note that for an unbiased noise, the distribution is centered at $0$.
+where $w_k \sim\mathcal{N}(\mu, \sigma^2)$ is the noise vector. The choices of $D_1, D_2$ ensure that the process and measurement noises are independent. In addition, $w_k$ follows a Gaussian distribution with mean $\mu$ and variance $\sigma^2$. Note that for unbiased noise, the distribution is centered at $0$.
 
-A filter uses the measurement upto $k+1$-th step to estimate the state at $k+1$-th step. The estimate
+A filter uses the measurement up to the $k+1$-th step to estimate the state at the $k+1$-th step. The estimate
 \begin{align}
     \hat{x}_{k+1} = A \hat{x}_k + B u_k + K({y}_{k+1} - \hat{y}_{k+1}).
     \label{eqn:filterEquation}
 \end{align}
 Here, the term $A \hat{x}_k + B u_k$ is the naive estimator term which by itself only is not gonna work and the term $K({y}_{k+1} - \hat{y}_{k+1})$ is the injection of output error that'll help minimize the state error if the gain is chosen properly. Note that the state error $e$, which is the difference of estimate and the true states, is not gonna go to zero when there are process and measurement noises. If there were to be no noises, then one can use design $K$ to place the poles for the observer to LHP to drive $e$ to $0$. For the stochastic systems, i.e., in the presence of noises, the method mentioned for the deterministic system might not work.
 
-The Kalman gain $K$ is selected optimally; optimal in the sense that the gain minimizes the covariance of the posterior error. Before moving onto the derivation for the Kalman gain, let's focus on $\hat{y}_{k+1}$ term in Eq.~\ref{eqn:filterEquation}. $\hat{y}_{k+1}$ is the estimate of the output at $k+1$-th step. From the output equation in Eq.~\ref{eqn:stateSpaceModelWNoise}, we can see that $\hat{y}_{k+1}$ is computed using $\hat{x}_{k+1}$ which is exactly what we are estimating. In this case, the best value that we can assign for $\hat{y}_{k+1}$ is $\hat{y}_{k+1}$ just before the filtering at step $k+1$. Anyway, what's the $\hat{y}_{k+1}$ just before the filtering at step $k+1$? It's $C \hat{x}_{k+1}$ before filtering. This can be better understood if we break down the estimator into $2$ steps.
+The Kalman gain $K$ is selected optimally; optimal in the sense that the gain minimizes the covariance of the posterior error. Before moving on to the derivation for the Kalman gain, let us focus on the $\hat{y}_{k+1}$ term in Eq.~\ref{eqn:filterEquation}. $\hat{y}_{k+1}$ is the estimate of the output at $k+1$-th step. From the output equation in Eq.~\ref{eqn:stateSpaceModelWNoise}, we can see that $\hat{y}_{k+1}$ is calculated using $\hat{x}_{k+1}$, which is exactly what we are estimating. In this case, the best value that we can assign for $\hat{y}_{k+1}$ is $\hat{y}_{k+1}$ just before filtering at step $k+1$. Anyway, what is $\hat{y}_{k+1}$ just before the filtering at step $k+1$? It's $C \hat{x}_{k+1}$ before filtering. This can be better understood if we break down the estimator into $2$ steps.
 
 For the completeness purpose, the estimate of the predictor is similar to the filter's given in Eq.~\ref{eqn:filterEquation}, but the key idea is that the predictor uses measurement upto $k$-th step:
 \begin{align}
@@ -85,7 +85,7 @@ and the posterior error covariance
 where $R = D_2 D_2^T$ and the derivation follows the similar steps to the derivation of the prior error covariance.
 
 \subsubsection{Kalman Gain}
-\hspace{\parindent}The Kalman gain $K$ is the minimer of the trace of the posterior error covariance:
+\hspace{\parindent}The Kalman gain $K$ is the minimizer of the trace of the posterior error covariance:
 \begin{align}
     K_k &= \min_{\hat{K} \in\Re^{\ell_x \times \ell_y}} \text{trace} \: P_{k+1|k+1} \\
     &= P_{k+1|k} C^T (C P_{k+1|k} C^T + R)^{-1}.
