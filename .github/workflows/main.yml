@@ -18,13 +18,17 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y texlive-xetex texlive-fonts-recommended texlive-latex-extra
 
-    - name: Compile LaTeX document
+    - name: Compile LaTeX document (without output-directory)
       run: |
-        pdflatex -interaction=nonstopmode -output-directory=out main.tex
-        pdflatex -interaction=nonstopmode -output-directory=out main.tex  # Run twice for proper references
+        pdflatex -interaction=nonstopmode main.tex || exit 1
+        pdflatex -interaction=nonstopmode main.tex || exit 1
+
+    - name: List directory contents
+      run: |
+        ls -R  # Check if main.pdf is generated in the root directory
 
     - name: Upload PDF as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: compiled-pdf
-        path: out/main.pdf
+        path: main.pdf
