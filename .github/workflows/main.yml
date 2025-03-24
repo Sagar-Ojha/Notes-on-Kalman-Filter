@@ -24,7 +24,7 @@ jobs:
         pdflatex -interaction=nonstopmode -output-directory=out main.tex  # Run twice for proper references
 
     - name: Upload PDF as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: compiled-pdf
         path: out/main.pdf
