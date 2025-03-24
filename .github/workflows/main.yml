@@ -23,8 +23,9 @@ jobs:
         pdflatex -interaction=nonstopmode main.tex || exit 1  # Compile LaTeX
         pdflatex -interaction=nonstopmode main.tex || exit 1  # Compile twice for proper references
 
-    - name: Upload PDF as artifact
-      uses: actions/upload-artifact@v4
+    - name: Create Release and Upload PDF
+      uses: softprops/action-gh-release@v1  # Automatically create a GitHub release
       with:
-        name: compiled-pdf
-        path: main.pdf  # Path to the compiled PDF (in the root directory)
+        files: main.pdf  # Attach the compiled PDF to the release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to authenticate with the GitHub API
