@@ -23,9 +23,14 @@ jobs:
         pdflatex -interaction=nonstopmode main.tex || exit 1  # Compile LaTeX
         pdflatex -interaction=nonstopmode main.tex || exit 1  # Compile twice for proper references
 
+    - name: Get commit SHA
+      id: sha
+      run: echo "::set-output name=commit_sha::$(git rev-parse --short HEAD)"
+
     - name: Create Release and Upload PDF
       uses: softprops/action-gh-release@v1  # Automatically create a GitHub release
       with:
+        tag_name: ${{ steps.sha.outputs.commit_sha }}  # Use the commit SHA as the tag
         files: main.pdf  # Attach the compiled PDF to the release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to authenticate with the GitHub API
